@@ -1,0 +1,17 @@
+steps:
+  # Docker Build
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'europe-west4-docker.pkg.dev/${PROJECT_ID}/pos-docker-repo/pos-ticket-system-backend:v1', '.']
+
+  # Docker Push to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'europe-west4-docker.pkg.dev/${PROJECT_ID}/pos-docker-repo/pos-ticket-system-backend:v1']
+
+  # Deploy to Kubernetes Cluster
+  - name: 'gcr.io/cloud-builders/gke-deploy'
+    args:
+      - run
+      - --filename=gke
+      - --image=europe-west4-docker.pkg.dev/${PROJECT_ID}/pos-docker-repo/pos-ticket-system-backend:v1
+      - --location=europe-west4
+      - --cluster=pos-cluster

@@ -1,0 +1,8 @@
+.git
+.gitignore
+.dockerignore
+node_modules
+dist
+Dockerfile
+yarn.lock
+README.md

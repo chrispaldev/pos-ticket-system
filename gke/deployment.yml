@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pos-ticket-system-backend-deployment
+  labels:
+    app: pos-ticket-system-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pos-ticket-system-backend
+  template:
+    metadata:
+      labels:
+        app: pos-ticket-system-backend
+    spec:
+      containers:
+        - name: pos-ticket-system-backend
+          image: europe-west4-docker.pkg.dev/tpos-ticket-system/pos-docker-repo/pos-ticket-system-backend:v1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /api/v1/health
+              port: 3000
+            initialDelaySeconds: 15
+            periodSeconds: 15
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /api/v1/health
+              port: 3000
+            initialDelaySeconds: 15
+            periodSeconds: 15
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
